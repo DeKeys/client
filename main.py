@@ -1,5 +1,6 @@
-from functions import check_keys, sign_data, init_user, menu, add_password, remove_password, get_passwords
+from functions import check_keys, sign_data, init_user, menu, add_password, remove_password, get_passwords, picture
 
+picture()
 private_key, public_key, pub_key_string = (check_keys())
 signature, data = (sign_data(private_key))
 init_flag = init_user(pub_key_string, signature, data)

@@ -7,6 +7,14 @@ import requests
 import json
 import  subprocess
 
+def picture():
+    print(""""╔═══╗╔═══╗╔╗╔═╗╔═══╗╔╗──╔╗╔═══╗
+╚╗╔╗║║╔══╝║║║╔╝║╔══╝║╚╗╔╝║║╔═╗║
+─║║║║║╚══╗║╚╝╝─║╚══╗╚╗╚╝╔╝║╚══╗
+─║║║║║╔══╝║╔╗║─║╔══╝─╚╗╔╝─╚══╗║
+╔╝╚╝║║╚══╗║║║╚╗║╚══╗──║║──║╚═╝║
+╚═══╝╚═══╝╚╝╚═╝╚═══╝──╚╝──╚═══╝""")
+
 def menu():
     print(''.join(40 * ["[]"]))
     print(f""" DeKeys Menu:\n1 - Show all paswords\n2 - Add Password\n3 - Remove Password\n4 - Leave""")
