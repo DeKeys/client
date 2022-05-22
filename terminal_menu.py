@@ -6,11 +6,9 @@ def menu_terminal():
     private_key, public_key, pub_key_string = (keys_terminal())
     signature, data = (sign_data(private_key))
     init_flag = init_user(pub_key_string, signature, data)
-    print("Marker1")
     if init_flag != True:
         print("Your keys are invalid")
         return
-    print("Marker2")
     while True:
         print_delimiter()
         print(f""" DeKeys Menu:\n1 - Show all paswords\n2 - Add Password\n3 - Remove Password\n4 - Leave""")
@@ -18,13 +16,13 @@ def menu_terminal():
         if choice in ["1", "2", "3", "4"]:
             print_delimiter()
         else:
-            menu_terminal()
+            print("Invalid character")
         if choice == "1":
             get_password_terminal(pub_key_string, private_key, signature, data)
         elif choice == "2":
             add_password_terminal(public_key, pub_key_string, signature, data)
         elif choice == "3":
-            remove_password_terminal(pub_key_string, signature, data)
+            remove_password_terminal(pub_key_string, signature, data, private_key)
         else:
             break
 
@@ -52,9 +50,9 @@ def keys_terminal():
 
 
 def add_password_terminal(public_key, pub_key_string, signature, data):
-    service = input("Enter service\n")
-    login = input("\nEnter login\n")
-    password = input("\nEnter password\n")
+    service = input("Enter service:\n")
+    login = input("\nEnter login:\n")
+    password = input("\nEnter password:\n")
     check_flag = (input("\nDo you approve the addition?\nY/N\n")).upper()
     if check_flag == "N":
         return
@@ -72,10 +70,18 @@ def get_password_terminal(pub_key_string, private_key, signature, data):
         print(f"Service: {i['service']}")
         print(f"Login: {i['login']}")
         print(f"Password: {i['password']}\n")
+        print(f"Address: {i['address']}\n")
 
 
-def remove_password_terminal(pub_key_string, signature, data):
-    remove_password(pub_key_string, signature, data)
+def remove_password_terminal(pub_key_string, signature, data, private_key):
+    choice = input("Please, enter password id, which you want remove:\n")
+    res = get_passwords(pub_key_string, private_key, signature, data)
+    try:
+        choice = int(choice)
+        address = res[choice-1]["address"]
+    except:
+        print("Something went wrong")
+        return
+    remove_password(pub_key_string, signature, data, address)
     print("Your password has been removed")
-
 
