@@ -150,3 +150,39 @@ def generate_keys():
         f.write(private_key_bytes)
     with open("public.pem", "wb") as f:
         f.write(public_key)
+
+def change_password(public_key, pub_key_string, signature, address, service, login, password, data):
+    enc_login = public_key.encrypt(
+        login.encode("utf-8"),
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA512()),
+            algorithm=hashes.SHA512(),
+            label=None
+        )
+    ).hex()
+    enc_password = public_key.encrypt(
+        password.encode("utf-8"),
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA512()),
+            algorithm=hashes.SHA512(),
+            label=None
+        )
+    ).hex()
+    enc_service = public_key.encrypt(
+        service.encode("utf-8"),
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA512()),
+            algorithm=hashes.SHA512(),
+            label=None
+        )
+    ).hex()
+    # {public_key, verification_string, signature, address, service, login, password}
+    response = requests.post(f"http://{IP_ADDRESS}:8000/api/edit_password", json={
+        "public_key": pub_key_string,
+        "verification_string": data.hex(),
+        "signature": signature.hex(),
+        "address": address,
+        "service": enc_service,
+        "login": enc_login,
+        "password": enc_password
+    })
