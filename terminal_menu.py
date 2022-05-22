@@ -62,7 +62,7 @@ def get_password_terminal(pub_key_string, private_key, signature, data):
         print(f"Service: {i['service']}")
         print(f"Login: {i['login']}")
         print(f"Password: {i['password']}\n")
-        print(f"Password: {i['address']}\n")
+        print(f"Address: {i['address']}\n")
 
 def remove_password_terminal(pub_key_string, signature, data, private_key):
     choice = input("Please, enter password id, which you want remove:\n")
