@@ -2,31 +2,14 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import hashes
 import secrets
-from binascii import hexlify, unhexlify
+from binascii import unhexlify
 import requests
 import json
-import  subprocess
 
-def picture():
-    print(""""╔═══╗╔═══╗╔╗╔═╗╔═══╗╔╗──╔╗╔═══╗
-╚╗╔╗║║╔══╝║║║╔╝║╔══╝║╚╗╔╝║║╔═╗║
-─║║║║║╚══╗║╚╝╝─║╚══╗╚╗╚╝╔╝║╚══╗
-─║║║║║╔══╝║╔╗║─║╔══╝─╚╗╔╝─╚══╗║
-╔╝╚╝║║╚══╗║║║╚╗║╚══╗──║║──║╚═╝║
-╚═══╝╚═══╝╚╝╚═╝╚═══╝──╚╝──╚═══╝""")
-
-def menu():
-    print(''.join(40 * ["[]"]))
-    print(f""" DeKeys Menu:\n1 - Show all paswords\n2 - Add Password\n3 - Remove Password\n4 - Leave""")
-    choice = input("Enter an option: ")
-    if choice in ["1", "2", "3", "4"]:
-        print(''.join(40 * ["[]"]))
-    else:
-        menu()
-    return choice
+IP_ADDRESS = "217.28.228.66"
 
 def init_user(pub_key_string, signature, data):
-    response = requests.post(f"http://217.28.228.66:8000/api/init_user", json={
+    response = requests.post(f"http://{IP_ADDRESS}:8000/api/init_user", json={
         "public_key": pub_key_string,
         "verification_string": data.hex(),
         "signature": signature.hex()
@@ -36,14 +19,7 @@ def init_user(pub_key_string, signature, data):
     else:
         return False
 
-def add_password(public_key, pub_key_string, signature, data):
-    service = input("Enter service\n")
-    login = input("\nEnter login\n")
-    password = input("\nEnter password\n")
-    check_flag = (input("\nDo you approve the addition?\nY/N\n")).upper()
-    if check_flag == "N":
-        print(''.join(40 * ["[]"]))
-        return
+def add_password(public_key, pub_key_string, signature, data, service, login, password):
     enc_login = public_key.encrypt(
         login.encode("utf-8"),
         padding.OAEP(
@@ -68,7 +44,7 @@ def add_password(public_key, pub_key_string, signature, data):
             label=None
         )
     ).hex()
-    response = requests.post(f"http://217.28.228.66:8000/api/create_password", json={
+    response = requests.post(f"http://{IP_ADDRESS}:8000/api/create_password", json={
         "public_key": pub_key_string,
         "verification_string": data.hex(),
         "signature": signature.hex(),
@@ -77,19 +53,17 @@ def add_password(public_key, pub_key_string, signature, data):
         "password": enc_password
 
     })
-    print("Your password has been successfully added")
 
 def remove_password(pub_key_string, signature, data):
-    response = requests.post(f"http://217.28.228.66:8000/api/delete_password", json={
+    response = requests.post(f"http://{IP_ADDRESS}:8000/api/delete_password", json={
         "public_key": pub_key_string,
         "verification_string": data.hex(),
         "signature": signature.hex(),
-        "address": "QmYP8txbVsU2AHXXyjkAPcW3Rufpr3n9PWBUWWQ3KG3cZu"
+        "address": "QmYP8txbVsU2AHXXyjkAPcW3Rufpr3n9PWBUWWQ3KG3cZu"    #Here's problem with remove password
     })
-    print("Your password has been removed")
 
 def get_passwords(pub_key_string, private_key, signature, data):
-    response = requests.get(f"http://217.28.228.66:8000/api/get_passwords", json={
+    response = requests.get(f"http://{IP_ADDRESS}:8000/api/get_passwords", json={
         "public_key": pub_key_string,
         "verification_string": data.hex(),
         "signature": signature.hex(),
@@ -122,20 +96,9 @@ def get_passwords(pub_key_string, private_key, signature, data):
             )
         ).decode("utf-8")
         res.append(pwd)
-    count = 0
-    print("")
-    for i in res:
-        count += 1
-        print(f"id: {count}")
-        print(f"Service: {i['service']}")
-        print(f"Login: {i['login']}")
-        print(f"Password: {i['password']}\n")
+    return res
 
 def check_keys():
-    print(''.join(40 * ["[]"]))
-    key_flag = (input("Do you have a private and public key?\nY/N\n")).upper()
-    if key_flag == "N":
-        subprocess.Popen(['python3', 'gen_rsa.py'])
     # Load private key
     with open("private.pem", "rb") as f:
         private_key = serialization.load_pem_private_key(
@@ -162,3 +125,28 @@ def sign_data(private_key):
         hashes.SHA512()
     )
     return signature, data
+
+def generate_keys():
+    from cryptography.hazmat.primitives.asymmetric import rsa
+    from cryptography.hazmat.primitives import serialization
+
+    private_key = rsa.generate_private_key(
+        public_exponent=65537,
+        key_size=4096
+    )
+
+    private_key_bytes = private_key.private_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PrivateFormat.PKCS8,
+        encryption_algorithm=serialization.NoEncryption()
+    )
+    public_key = private_key.public_key()
+    public_key = public_key.public_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PublicFormat.SubjectPublicKeyInfo
+    )
+
+    with open("private.pem", "wb") as f:
+        f.write(private_key_bytes)
+    with open("public.pem", "wb") as f:
+        f.write(public_key)
