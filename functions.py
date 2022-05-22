@@ -54,12 +54,12 @@ def add_password(public_key, pub_key_string, signature, data, service, login, pa
 
     })
 
-def remove_password(pub_key_string, signature, data):
+def remove_password(pub_key_string, signature, data, address):
     response = requests.post(f"http://{IP_ADDRESS}:8000/api/delete_password", json={
         "public_key": pub_key_string,
         "verification_string": data.hex(),
         "signature": signature.hex(),
-        "address": "QmYP8txbVsU2AHXXyjkAPcW3Rufpr3n9PWBUWWQ3KG3cZu"    #Here's problem with remove password
+        "address": address
     })
 
 def get_passwords(pub_key_string, private_key, signature, data):
