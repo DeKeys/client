@@ -1,15 +1,17 @@
 from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives.asymmetric import padding, rsa
 from cryptography.hazmat.primitives import hashes
 import secrets
 from binascii import unhexlify
 import requests
 import json
 
-IP_ADDRESS = "217.28.228.66"
+
+IP_ADDRESS = "http://217.28.228.66:8000/api/{}"
+
 
 def init_user(pub_key_string, signature, data):
-    response = requests.post(f"http://{IP_ADDRESS}:8000/api/init_user", json={
+    response = requests.post(IP_ADDRESS.format("init_user"), json={
         "public_key": pub_key_string,
         "verification_string": data.hex(),
         "signature": signature.hex()
@@ -19,7 +21,11 @@ def init_user(pub_key_string, signature, data):
     else:
         return False
 
-def add_password(public_key, pub_key_string, signature, data, service, login, password):
+
+def add_password(pub_key_string, signature, data, service, login, password):
+    public_key = serialization.load_pem_public_key(
+        pub_key_string
+    )
     enc_login = public_key.encrypt(
         login.encode("utf-8"),
         padding.OAEP(
@@ -44,7 +50,7 @@ def add_password(public_key, pub_key_string, signature, data, service, login, pa
             label=None
         )
     ).hex()
-    response = requests.post(f"http://{IP_ADDRESS}:8000/api/create_password", json={
+    response = requests.post(IP_ADDRESS.format("create_password"), json={
         "public_key": pub_key_string,
         "verification_string": data.hex(),
         "signature": signature.hex(),
@@ -54,16 +60,18 @@ def add_password(public_key, pub_key_string, signature, data, service, login, pa
 
     })
 
-def remove_password(pub_key_string, signature, data):
-    response = requests.post(f"http://{IP_ADDRESS}:8000/api/delete_password", json={
+
+def remove_password(pub_key_string, signature, verification_string, address):
+    response = requests.post(IP_ADDRESS.format("delete_password"), json={
         "public_key": pub_key_string,
-        "verification_string": data.hex(),
+        "verification_string": verification_string.hex(),
         "signature": signature.hex(),
-        "address": "QmYP8txbVsU2AHXXyjkAPcW3Rufpr3n9PWBUWWQ3KG3cZu"    #Here's problem with remove password
+        "address": address
     })
 
+
 def get_passwords(pub_key_string, private_key, signature, data):
-    response = requests.get(f"http://{IP_ADDRESS}:8000/api/get_passwords", json={
+    response = requests.get(IP_ADDRESS.format("get_passwords"), json={
         "public_key": pub_key_string,
         "verification_string": data.hex(),
         "signature": signature.hex(),
@@ -98,6 +106,7 @@ def get_passwords(pub_key_string, private_key, signature, data):
         res.append(pwd)
     return res
 
+
 def check_keys():
     # Load private key
     with open("private.pem", "rb") as f:
@@ -114,6 +123,7 @@ def check_keys():
         pub_key_string = pub_key_string.hex()
     return private_key, public_key, pub_key_string
 
+
 def sign_data(private_key):
     data = secrets.token_bytes(128)
     signature = private_key.sign(
@@ -126,10 +136,8 @@ def sign_data(private_key):
     )
     return signature, data
 
-def generate_keys():
-    from cryptography.hazmat.primitives.asymmetric import rsa
-    from cryptography.hazmat.primitives import serialization
 
+def generate_keys():
     private_key = rsa.generate_private_key(
         public_exponent=65537,
         key_size=4096
