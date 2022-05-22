@@ -22,10 +22,7 @@ def init_user(pub_key_string, signature, data):
         return False
 
 
-def add_password(pub_key_string, signature, data, service, login, password):
-    public_key = serialization.load_pem_public_key(
-        pub_key_string
-    )
+def add_password(public_key, pub_key_string, signature, data, service, login, password):
     enc_login = public_key.encrypt(
         login.encode("utf-8"),
         padding.OAEP(
