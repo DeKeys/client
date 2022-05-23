@@ -1,4 +1,4 @@
-from functions import check_keys, sign_data, init_user, add_password, remove_password, get_passwords, generate_keys, change_password
+from functions import check_keys, sign_data, init_user, add_password, remove_password, get_passwords, generate_keys, edit_password
 
 
 def menu_terminal():
@@ -101,4 +101,4 @@ def change_password_terminal(public_key, pub_key_string, signature, data, privat
     check_flag = (input("\nDo you approve the addition?\nY/N\n")).upper()
     if check_flag == "N":
         return
-    change_password(public_key, pub_key_string, signature, block["address"], block["service"], login, password, data)
+    edit_password(public_key, pub_key_string, signature, block["address"], block["service"], login, password, data)

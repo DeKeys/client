@@ -156,7 +156,7 @@ def generate_keys():
     with open("public.pem", "wb") as f:
         f.write(public_key)
         
-def change_password(public_key, pub_key_string, signature, address, service, login, password, data):
+def edit_password(public_key, pub_key_string, signature, address, service, login, password, data):
     enc_login = public_key.encrypt(
         login.encode("utf-8"),
         padding.OAEP(
