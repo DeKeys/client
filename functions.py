@@ -58,7 +58,7 @@ def add_password(public_key, pub_key_string, signature, data, service, login, pa
     })
 
 
-def remove_password(pub_key_string, signature, verification_string, address):
+def delete_password(pub_key_string, signature, verification_string, address):
     response = requests.post(IP_ADDRESS.format("delete_password"), json={
         "public_key": pub_key_string,
         "verification_string": verification_string.hex(),

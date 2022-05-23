@@ -1,4 +1,4 @@
-from functions import check_keys, sign_data, init_user, add_password, remove_password, get_passwords, generate_keys, edit_password
+from functions import check_keys, sign_data, init_user, add_password, delete_password, get_passwords, generate_keys, edit_password
 
 
 def menu_terminal():
@@ -84,7 +84,7 @@ def remove_password_terminal(pub_key_string, signature, data, private_key):
     except:
         print("Something went wrong")
         return
-    remove_password(pub_key_string, signature, data, address)
+    delete_password(pub_key_string, signature, data, address)
     print("Your password has been removed")
 
 def change_password_terminal(public_key, pub_key_string, signature, data, private_key):    #This function need to change passwords, but now it not complete
