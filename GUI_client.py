@@ -1,7 +1,9 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QGridLayout, QPushButton, QLabel
 from PyQt5.QtGui import QFont
+
 from src.widgets.passwords_list_header import PasswordsListHeader
 from src.widgets.passwords_list_widget import PasswordsListWidget
+
 import sys
 
 
@@ -22,6 +24,9 @@ class PasswordsListWindow(QMainWindow):
 
         self.centralWidget.setLayout(self.gridLayout)
         self.setCentralWidget(self.centralWidget)
+
+    def complete_get_passwords(self, reply):
+        print(reply)
 
 
 if __name__ == "__main__":
