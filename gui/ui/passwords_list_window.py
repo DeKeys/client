@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QWidget, QGridLayout
+from PyQt6.QtWidgets import QMainWindow, QWidget, QGridLayout
 
 from gui.src.widgets.passwords_list_header import PasswordsListHeader
 from gui.src.widgets.passwords_list_widget import PasswordsListWidget
@@ -18,11 +18,11 @@ class Ui_PasswordsListWindow(QMainWindow):
 
         # Create header and widget for listing passwords
         self.header = PasswordsListHeader(self)
-        self.passwords_list = PasswordsListWidget(self)
+        self.passwordsList = PasswordsListWidget(self)
 
         # Add widgets to the layout
         self.gridLayout.addWidget(self.header, 0, 0, 1, 1)
-        self.gridLayout.addWidget(self.passwords_list, 1, 0, 1, 1)
+        self.gridLayout.addWidget(self.passwordsList, 1, 0, 1, 1)
 
         # Set margin to zero
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
