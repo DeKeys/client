@@ -29,8 +29,13 @@ class PasswordModificationWindow(Ui_PasswordModificationWindow):
 
         self.submitPasswordButton.setText("Save")
 
+        self.ipfsLinkTitle.setHidden(False)
+        self.ipfsPasswordLinkLineEdit.setHidden(False)
+        self.ipfsPasswordLinkLineEdit.setText(f'https://ipfs.infura.io/ipfs/{self.data["address"]}')
+
     def passwordSaved(self, reply):
         self.parent().getPasswords()
+        self.close()
 
     def checkChange(self, text):
         service = self.serviceLineEdit.text()
