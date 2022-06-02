@@ -22,7 +22,16 @@ class PasswordsListWindow(Ui_PasswordsListWindow):
         self.networkManager = QNetworkAccessManager()
         self.networkManager.finished.connect(self.finishedGettingPasswords)
 
+        self.header.refreshPasswordsButton.clicked.connect(self.getPasswords)
+
+        self.passwords = []
+
+        self.getPasswords()
+
+    def getPasswords(self):
         # Create requests for getting passwords
+        self.header.loadingIndicator.setHidden(False)
+        self.header.spinner.start()
         request = QNetworkRequest(QUrl("http://217.28.228.66:8000/api/get_passwords"))
         data, signature = generate_verification()
         self.networkManager.sendCustomRequest(
@@ -35,12 +44,11 @@ class PasswordsListWindow(Ui_PasswordsListWindow):
             }).encode("utf-8"))
         )
 
-        self.passwords = []
-
     def finishedGettingPasswords(self, reply):
         try:
             encrypted_passwords = json.loads(json.loads(bytes(reply.readAll()).decode("utf-8")))
             res = []
+            self.passwordsList.clear()
             for pwd in encrypted_passwords["passwords"]:
                 pwd["service"] = private_key.decrypt(
                     unhexlify(pwd["service"]),
