@@ -3,7 +3,7 @@ from PyQt5.QtGui import QFont
 
 from gui.ui.passwords_list_header import Ui_PasswordsListHeader
 
-from gui.src.windows.password_modification_window import PasswordModificationWindow
+from gui.src.windows.password_addition_window import PasswordAdditionWindow
 
 
 class PasswordsListHeader(Ui_PasswordsListHeader):
@@ -13,7 +13,7 @@ class PasswordsListHeader(Ui_PasswordsListHeader):
         self.addPasswordButton.clicked.connect(self.addPassword)
 
     def addPassword(self):
-        addPasswordWindow = PasswordModificationWindow({
+        addPasswordWindow = PasswordAdditionWindow({
             "service": "",
             "login": "",
             "password": ""
