@@ -27,11 +27,16 @@ class Ui_PasswordModificationWindow(QMainWindow):
 
         # Button for adding password
         self.submitPasswordButton = QPushButton()
-        self.submitPasswordButton.setText("Submit")
         self.submitPasswordButton.setDefault(True)
+        self.submitPasswordButton.setEnabled(False)
 
-        # Text box
+        self.serviceLineEdit.textChanged.connect(self.textChanged)
+        self.loginLineEdit.textChanged.connect(self.textChanged)
+        self.passwordLineEdit.textChanged.connect(self.textChanged)
+
+        # Check box
         self.passwordOpenButton = QCheckBox()
+        self.passwordOpenButton.clicked.connect(self.password_open_button_func)
 
         self.gridLayout.addWidget(self.titleLabelService, 1, 0, 1, 2)
         self.gridLayout.addWidget(self.serviceLineEdit, 2, 0, 1, 2)
@@ -44,4 +49,15 @@ class Ui_PasswordModificationWindow(QMainWindow):
 
         self.centralWidget.setLayout(self.gridLayout)
         self.setCentralWidget(self.centralWidget)
+
+    def textChanged(self, new):
+        self.submitPasswordButton.setEnabled(bool(self.serviceLineEdit.text() and\
+                                                  self.loginLineEdit.text() and\
+                                                  self.passwordLineEdit.text()))
+    def password_open_button_func(self):
+        if self.passwordOpenButton.isChecked():
+            self.passwordLineEdit.setEchoMode(QLineEdit.EchoMode.Normal)
+        else:
+            self.passwordLineEdit.setEchoMode(QLineEdit.EchoMode.Password)
+
 
