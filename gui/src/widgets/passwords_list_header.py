@@ -9,6 +9,7 @@ from gui.src.windows.password_addition_window import PasswordAdditionWindow
 class PasswordsListHeader(Ui_PasswordsListHeader):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
+        self.parent = parent
 
         self.addPasswordButton.clicked.connect(self.addPassword)
 

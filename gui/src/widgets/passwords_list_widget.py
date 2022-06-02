@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QListWidget, QListWidgetItem
+from PyQt5.QtWidgets import QListWidget, QListWidgetItem, QAbstractItemView
 from PyQt5.QtGui import QFont, QPixmap, QIcon
 from PyQt5.QtCore import QUrl, QByteArray
 from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest
@@ -16,4 +16,6 @@ class PasswordsListWidget(QListWidget):
         self.font = QFont()
         self.font.setPointSize(16)
         self.setFont(self.font)
+
+        self.setSelectionMode(QAbstractItemView.ExtendedSelection)
 

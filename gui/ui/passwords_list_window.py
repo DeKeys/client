@@ -5,8 +5,8 @@ from gui.src.widgets.passwords_list_widget import PasswordsListWidget
 
 
 class Ui_PasswordsListWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
 
         self.resize(700, 500)
 

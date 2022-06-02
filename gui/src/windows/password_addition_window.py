@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QLineEdit
+from PyQt5.QtWidgets import QLineEdit, QMessageBox
 from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest
 from PyQt5.QtCore import QUrl, QByteArray
 
@@ -23,9 +23,14 @@ class PasswordAdditionWindow(Ui_PasswordModificationWindow):
         self.data = data
         self.submitPasswordButton.clicked.connect(self.button_submit_pressed)
         self.submitPasswordButton.setText("Add")
+        print()
 
     def finishedAddingPassword(self, reply):
-        print(reply.readAll())
+        self.parent().parent.getPasswords()
+        msg = QMessageBox(self)
+        msg.setText("Successfully added password")
+        msg.show()
+        self.close()
 
     def button_submit_pressed(self):
         service = self.serviceLineEdit.text()
