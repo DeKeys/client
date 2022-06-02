@@ -38,33 +38,38 @@ class PasswordsListWindow(Ui_PasswordsListWindow):
         self.passwords = []
 
     def finishedGettingPasswords(self, reply):
-        encrypted_passwords = json.loads(json.loads(bytes(reply.readAll()).decode("utf-8")))
-        res = []
-        for pwd in encrypted_passwords["passwords"]:
-            pwd["service"] = private_key.decrypt(
-                unhexlify(pwd["service"]),
-                padding.OAEP(
-                    mgf=padding.MGF1(algorithm=hashes.SHA512()),
-                    algorithm=hashes.SHA512(),
-                    label=None
-                )
-            ).decode("utf-8")
-            pwd["login"] = private_key.decrypt(
-                unhexlify(pwd["login"]),
-                padding.OAEP(
-                    mgf=padding.MGF1(algorithm=hashes.SHA512()),
-                    algorithm=hashes.SHA512(),
-                    label=None
-                )
-            ).decode("utf-8")
-            pwd["password"] = private_key.decrypt(
-                unhexlify(pwd["password"]),
-                padding.OAEP(
-                    mgf=padding.MGF1(algorithm=hashes.SHA512()),
-                    algorithm=hashes.SHA512(),
-                    label=None
-                )
-            ).decode("utf-8")
-            res.append(pwd)
-            self.passwordsList.addItem(PasswordListWidgetItem(pwd["service"]))
-        self.passwords = res
+        try:
+            encrypted_passwords = json.loads(json.loads(bytes(reply.readAll()).decode("utf-8")))
+            res = []
+            for pwd in encrypted_passwords["passwords"]:
+                pwd["service"] = private_key.decrypt(
+                    unhexlify(pwd["service"]),
+                    padding.OAEP(
+                        mgf=padding.MGF1(algorithm=hashes.SHA512()),
+                        algorithm=hashes.SHA512(),
+                        label=None
+                    )
+                ).decode("utf-8")
+                pwd["login"] = private_key.decrypt(
+                    unhexlify(pwd["login"]),
+                    padding.OAEP(
+                        mgf=padding.MGF1(algorithm=hashes.SHA512()),
+                        algorithm=hashes.SHA512(),
+                        label=None
+                    )
+                ).decode("utf-8")
+                pwd["password"] = private_key.decrypt(
+                    unhexlify(pwd["password"]),
+                    padding.OAEP(
+                        mgf=padding.MGF1(algorithm=hashes.SHA512()),
+                        algorithm=hashes.SHA512(),
+                        label=None
+                    )
+                ).decode("utf-8")
+                res.append(pwd)
+                self.passwordsList.addItem(PasswordListWidgetItem(pwd["service"]))
+            self.passwords = res
+            self.header.spinner.stop()
+            self.header.loadingIndicator.setHidden(True)
+        except json.decoder.JSONDecodeError:
+            pass
