@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QLineEdit
+from PyQt5.QtWidgets import QLineEdit
 
 from gui.ui.password_modification_window import Ui_PasswordModificationWindow
 

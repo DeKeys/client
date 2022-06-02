@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QGridLayout, QPushButton, QLabel, QLineEdit, QCheckBox
-from PyQt6.QtGui import QFont
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QGridLayout, QPushButton, QLabel, QLineEdit, QCheckBox
+from PyQt5.QtGui import QFont
 
 
 class Ui_PasswordModificationWindow(QMainWindow):

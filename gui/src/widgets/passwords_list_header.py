@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QWidget, QGridLayout, QPushButton, QLabel
-from PyQt6.QtGui import QFont
+from PyQt5.QtWidgets import QWidget, QGridLayout, QPushButton, QLabel
+from PyQt5.QtGui import QFont
 
 from gui.ui.passwords_list_header import Ui_PasswordsListHeader
 

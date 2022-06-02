@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QGridLayout, QPushButton, QLabel
-from PyQt6.QtGui import QFont
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QGridLayout, QPushButton, QLabel
+from PyQt5.QtGui import QFont
 
 from gui.src.windows.passwords_list_window import PasswordsListWindow
 

@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QMainWindow, QWidget, QGridLayout
+from PyQt5.QtWidgets import QMainWindow, QWidget, QGridLayout
 
 from gui.src.widgets.passwords_list_header import PasswordsListHeader
 from gui.src.widgets.passwords_list_widget import PasswordsListWidget

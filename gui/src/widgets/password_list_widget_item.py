@@ -1,7 +1,7 @@
-from PyQt6.QtWidgets import QListWidgetItem
-from PyQt6.QtGui import QIcon, QPixmap
-from PyQt6.QtCore import QUrl
-from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkRequest
+from PyQt5.QtWidgets import QListWidgetItem
+from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtCore import QUrl
+from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest
 
 import requests
 import os

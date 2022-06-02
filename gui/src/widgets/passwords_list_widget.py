@@ -1,7 +1,7 @@
-from PyQt6.QtWidgets import QListWidget, QListWidgetItem
-from PyQt6.QtGui import QFont, QPixmap, QIcon
-from PyQt6.QtCore import QUrl
-from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkRequest
+from PyQt5.QtWidgets import QListWidget, QListWidgetItem
+from PyQt5.QtGui import QFont, QPixmap, QIcon
+from PyQt5.QtCore import QUrl, QByteArray
+from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest
 
 from gui.src.widgets.password_list_widget_item import PasswordListWidgetItem
 
@@ -24,9 +24,11 @@ class PasswordsListWidget(QListWidget):
 
         # Create network manager for making requests to the API
         self.networkManager = QNetworkAccessManager()
-        self.networkManager.finished.connect(self.complete_get_passwords)
+        self.networkManager.finished.connect(self.completeGetPasswords)
         request = QNetworkRequest(QUrl("http://217.28.228.66:8000/api/get_passwords"))
-        self.networkManager.get(request).readAll()
+        self.networkManager.get(request)
 
-    def complete_get_passwords(self, reply):
-        print(reply.readAll())
+    def completeGetPasswords(self, reply):
+        status_code = reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)
+        print(status_code)
+
