@@ -3,6 +3,7 @@ from PyQt5.QtCore import QUrl, QByteArray
 
 from gui.ui.passwords_list_window import Ui_PasswordsListWindow
 from gui.src.widgets.password_list_widget_item import PasswordListWidgetItem
+from gui.src.windows.password_modification_window import PasswordModificationWindow
 from gui.constants import private_key, public_key, pub_key_string
 from gui.utils import generate_verification
 
@@ -28,9 +29,15 @@ class PasswordsListWindow(Ui_PasswordsListWindow):
         self.header.refreshPasswordsButton.clicked.connect(self.getPasswords)
         self.header.deletePasswordButton.clicked.connect(self.deletePasswords)
 
+        self.passwordsList.itemDoubleClicked.connect(self.openPasswordInfo)
+
         self.passwords = []
 
         self.getPasswords()
+
+    def openPasswordInfo(self):
+        window = PasswordModificationWindow(self.passwords[self.passwordsList.selectedIndexes()[0].row()], parent=self)
+        window.show()
 
     def deletePasswords(self):
         for index in self.passwordsList.selectedIndexes():

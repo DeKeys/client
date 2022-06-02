@@ -23,7 +23,6 @@ class PasswordAdditionWindow(Ui_PasswordModificationWindow):
         self.data = data
         self.submitPasswordButton.clicked.connect(self.button_submit_pressed)
         self.submitPasswordButton.setText("Add")
-        print()
 
     def finishedAddingPassword(self, reply):
         self.parent().parent.getPasswords()
