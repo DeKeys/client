@@ -11,6 +11,8 @@ IP_ADDRESS = "http://217.28.228.66:8000/api/{}"
 
 
 def init_user(pub_key_string, signature, data):
+    """initialisation of user in server"""
+
     response = requests.post(IP_ADDRESS.format("init_user"), json={
         "public_key": pub_key_string,
         "verification_string": data.hex(),
@@ -23,6 +25,8 @@ def init_user(pub_key_string, signature, data):
 
 
 def add_password(public_key, pub_key_string, signature, data, service, login, password):
+    """Encrypts and send to server new password"""
+
     enc_login = public_key.encrypt(
         login.encode("utf-8"),
         padding.OAEP(
@@ -59,6 +63,8 @@ def add_password(public_key, pub_key_string, signature, data, service, login, pa
 
 
 def delete_password(pub_key_string, signature, verification_string, address):
+    """Send to server key address to delete them"""
+
     response = requests.post(IP_ADDRESS.format("delete_password"), json={
         "public_key": pub_key_string,
         "verification_string": verification_string.hex(),
@@ -68,6 +74,8 @@ def delete_password(pub_key_string, signature, verification_string, address):
 
 
 def get_passwords(pub_key_string, private_key, signature, data):
+    """Get all keys from server and decrypt them"""
+
     response = requests.get(IP_ADDRESS.format("get_passwords"), json={
         "public_key": pub_key_string,
         "verification_string": data.hex(),
@@ -105,6 +113,8 @@ def get_passwords(pub_key_string, private_key, signature, data):
 
 
 def check_keys():
+    """Check public and private keys"""
+
     # Load private key
     with open("private.pem", "rb") as f:
         private_key = serialization.load_pem_private_key(
@@ -122,6 +132,8 @@ def check_keys():
 
 
 def sign_data(private_key):
+    """Make signature and data from private key"""
+
     data = secrets.token_bytes(128)
     signature = private_key.sign(
         data,
@@ -135,6 +147,8 @@ def sign_data(private_key):
 
 
 def generate_keys():
+    """Generate private and public keys"""
+
     private_key = rsa.generate_private_key(
         public_exponent=65537,
         key_size=4096
@@ -157,6 +171,8 @@ def generate_keys():
         f.write(public_key)
         
 def edit_password(public_key, pub_key_string, signature, address, service, login, password, data):
+    """Edit password"""
+
     enc_login = public_key.encrypt(
         login.encode("utf-8"),
         padding.OAEP(
