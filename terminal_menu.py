@@ -51,12 +51,20 @@ def keys_terminal():
     key_flag = (input("Do you have a private and public key?\nY/N\n")).upper()
     if key_flag == "N":
         generate_keys()
+    elif key_flag != "Y":
+        generate_keys()
     private_key, public_key, pub_key_string = (check_keys())
     return private_key, public_key, pub_key_string
 
 
 def add_password_terminal(public_key, pub_key_string, signature, data):
-    """Func which input data from user and start add_password func from functions.py"""
+    """Func which input data from user and start add_password func from functions.py
+
+    @param pub_key_string: public key in string type
+    @param public_key: public key
+    @param signature: signature for authentic user in server
+    @param data: key's data
+    """
     service = input("Enter service:\n")
     login = input("\nEnter login:\n")
     password = input("\nEnter password:\n")
@@ -68,7 +76,13 @@ def add_password_terminal(public_key, pub_key_string, signature, data):
 
 
 def get_password_terminal(pub_key_string, private_key, signature, data):
-    """Func which start get_passwords func from functions and print all keys to screen"""
+    """Func which start get_passwords func from functions and print all keys to screen
+
+    @param pub_key_string: public key in string type
+    @param private_key: private key
+    @param signature: signature for authentic user in server
+    @param data: key's data
+    """
     res = get_passwords(pub_key_string, private_key, signature, data)
     count = 0
     print("")
@@ -82,7 +96,13 @@ def get_password_terminal(pub_key_string, private_key, signature, data):
 
 
 def remove_password_terminal(pub_key_string, signature, data, private_key):
-    """Func which find key which user want delete and start delete_password from functions.py"""
+    """Func which find key which user want delete and start delete_password from functions.py
+
+    @param pub_key_string: public key in string type
+    @param private_key: private key
+    @param signature: signature for authentic user in server
+    @param data: key's data
+    """
     choice = input("Please, enter password id, which you want remove:\n")
     res = get_passwords(pub_key_string, private_key, signature, data)
     try:
@@ -95,7 +115,14 @@ def remove_password_terminal(pub_key_string, signature, data, private_key):
     print("Your password has been removed")
 
 def change_password_terminal(public_key, pub_key_string, signature, data, private_key):
-    """Func which input data from user and start edit_password from functions"""
+    """Func which input data from user and start edit_password from functions
+
+    @param pub_key_string: public key in string type
+    @param private_key: private key
+    @param signature: signature for authentic user in server
+    @param data: key's data
+    @param public_key: public key
+    """
     choice = input("Please, enter password id, which you want change\n")
     res = get_passwords(pub_key_string, private_key, signature, data)
     try:
