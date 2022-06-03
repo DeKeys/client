@@ -5,7 +5,11 @@ def menu_terminal():
     """Func which print menu and start another functions to work with server"""
     picture_terminal()
     private_key, public_key, pub_key_string = (keys_terminal())
-    signature, data = (sign_data(private_key))
+    try:
+        signature, data = (sign_data(private_key))
+    except:
+        print("No connection")
+        return
     init_flag = init_user(pub_key_string, signature, data)
     if init_flag != True:
         print("Your keys are invalid")
