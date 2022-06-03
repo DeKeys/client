@@ -21,17 +21,24 @@ class PasswordAdditionWindow(Ui_PasswordModificationWindow):
         self.networkManager.finished.connect(self.finishedAddingPassword)
 
         self.data = data
-        self.submitPasswordButton.clicked.connect(self.button_submit_pressed)
+        self.submitPasswordButton.clicked.connect(self.buttonSubmitPressed)
         self.submitPasswordButton.setText("Add")
 
     def finishedAddingPassword(self, reply):
-        self.parent().parent.getPasswords()
-        msg = QMessageBox(self)
-        msg.setText("Successfully added password")
-        msg.show()
-        self.close()
+        statusCode = reply.attribute(QNetworkRequest.HttpStatusCodeAttribute)
+        if statusCode == 200:
+            self.parent().parent.getPasswords()
+            msg = QMessageBox(self)
+            msg.setText("Successfully added password")
+            msg.show()
+            self.close()
+        else:
+            msg = QMessageBox(self)
+            msg.setText("Couldn't add password")
+            msg.setInformativeText("Check your internet connection")
+            msg.show()
 
-    def button_submit_pressed(self):
+    def buttonSubmitPressed(self):
         service = self.serviceLineEdit.text()
         login = self.loginLineEdit.text()
         password = self.passwordLineEdit.text()

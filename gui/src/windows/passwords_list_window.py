@@ -76,7 +76,15 @@ class PasswordsListWindow(Ui_PasswordsListWindow):
         )
 
     def finishedDeletingPassword(self, reply):
-        self.getPasswords()
+        statusCode = reply.attribute(QNetworkRequest.HttpStatusCodeAttribute)
+        if statusCode == 200:
+            self.getPasswords()
+        else:
+            msg = QMessageBox(self)
+            msg.setText("Couldn't delete password")
+            msg.setInformativeText("Check your internet connection")
+            msg.show()
+
 
     def finishedGettingPasswords(self, reply):
         try:
@@ -87,7 +95,8 @@ class PasswordsListWindow(Ui_PasswordsListWindow):
                 self.showPasswords(encrypted_passwords)
             else:
                 msg = QMessageBox(self)
-                msg.setText("Couldn't load passwords from server")
+                msg.setText("Couldn't load passwords")
+                msg.setInformativeText("Check your internet connection")
                 msg.show()
         except json.decoder.JSONDecodeError:
             pass

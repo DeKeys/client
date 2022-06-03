@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QLineEdit
+from PyQt5.QtWidgets import QLineEdit, QMessageBox
 from PyQt5.QtNetwork import QNetworkRequest, QNetworkAccessManager
 from PyQt5.QtCore import QUrl, QByteArray
 
@@ -34,8 +34,15 @@ class PasswordModificationWindow(Ui_PasswordModificationWindow):
         self.ipfsPasswordLinkLineEdit.setText(f'https://ipfs.infura.io/ipfs/{self.data["address"]}')
 
     def passwordSaved(self, reply):
-        self.parent().getPasswords()
-        self.close()
+        statusCode = reply.attribute(QNetworkRequest.HttpStatusCodeAttribute)
+        if statusCode == 200:
+            self.parent().getPasswords()
+            self.close()
+        else:
+            msg = QMessageBox(self)
+            msg.setText("Couldn't update password")
+            msg.setInformativeText("Check your internet connection")
+            msg.show()
 
     def checkChange(self, text):
         service = self.serviceLineEdit.text()
