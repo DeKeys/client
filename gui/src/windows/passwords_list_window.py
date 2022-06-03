@@ -1,3 +1,4 @@
+from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest
 from PyQt5.QtCore import QUrl, QByteArray
 
@@ -10,6 +11,7 @@ from gui.utils import generate_verification
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import hashes
 
+import os
 import json
 import secrets
 from binascii import unhexlify
@@ -53,6 +55,11 @@ class PasswordsListWindow(Ui_PasswordsListWindow):
             }).encode("utf-8")))
 
     def getPasswords(self):
+        # Load cached files
+        if os.path.exists("passwords.json"):
+            passwords = json.load(open("passwords.json"))
+            self.showPasswords(passwords)
+
         # Create requests for getting passwords
         self.header.loadingIndicator.setHidden(False)
         self.header.spinner.start()
@@ -73,39 +80,49 @@ class PasswordsListWindow(Ui_PasswordsListWindow):
 
     def finishedGettingPasswords(self, reply):
         try:
-            encrypted_passwords = json.loads(json.loads(bytes(reply.readAll()).decode("utf-8")))
-            res = []
-            self.passwordsList.clear()
-            if encrypted_passwords:
-                for pwd in encrypted_passwords["passwords"]:
-                    pwd["service"] = private_key.decrypt(
-                        unhexlify(pwd["service"]),
-                        padding.OAEP(
-                            mgf=padding.MGF1(algorithm=hashes.SHA512()),
-                            algorithm=hashes.SHA512(),
-                            label=None
-                        )
-                    ).decode("utf-8")
-                    pwd["login"] = private_key.decrypt(
-                        unhexlify(pwd["login"]),
-                        padding.OAEP(
-                            mgf=padding.MGF1(algorithm=hashes.SHA512()),
-                            algorithm=hashes.SHA512(),
-                            label=None
-                        )
-                    ).decode("utf-8")
-                    pwd["password"] = private_key.decrypt(
-                        unhexlify(pwd["password"]),
-                        padding.OAEP(
-                            mgf=padding.MGF1(algorithm=hashes.SHA512()),
-                            algorithm=hashes.SHA512(),
-                            label=None
-                        )
-                    ).decode("utf-8")
-                    res.append(pwd)
-                    self.passwordsList.addItem(PasswordListWidgetItem(pwd["service"]))
-                self.passwords = res
-                self.header.spinner.stop()
-                self.header.loadingIndicator.setHidden(True)
+            statusCode = reply.attribute(QNetworkRequest.HttpStatusCodeAttribute)
+            if statusCode == 200:
+                encrypted_passwords = json.loads(json.loads(bytes(reply.readAll()).decode("utf-8")))
+                json.dump(encrypted_passwords, open("passwords.json", "w", encoding="utf-8"))
+                self.showPasswords(encrypted_passwords)
+            else:
+                msg = QMessageBox(self)
+                msg.setText("Couldn't load passwords from server")
+                msg.show()
         except json.decoder.JSONDecodeError:
             pass
+
+    def showPasswords(self, encrypted_passwords):
+        res = []
+        self.passwordsList.clear()
+        if encrypted_passwords:
+            for pwd in encrypted_passwords["passwords"]:
+                pwd["service"] = private_key.decrypt(
+                    unhexlify(pwd["service"]),
+                    padding.OAEP(
+                        mgf=padding.MGF1(algorithm=hashes.SHA512()),
+                        algorithm=hashes.SHA512(),
+                        label=None
+                    )
+                ).decode("utf-8")
+                pwd["login"] = private_key.decrypt(
+                    unhexlify(pwd["login"]),
+                    padding.OAEP(
+                        mgf=padding.MGF1(algorithm=hashes.SHA512()),
+                        algorithm=hashes.SHA512(),
+                        label=None
+                    )
+                ).decode("utf-8")
+                pwd["password"] = private_key.decrypt(
+                    unhexlify(pwd["password"]),
+                    padding.OAEP(
+                        mgf=padding.MGF1(algorithm=hashes.SHA512()),
+                        algorithm=hashes.SHA512(),
+                        label=None
+                    )
+                ).decode("utf-8")
+                res.append(pwd)
+                self.passwordsList.addItem(PasswordListWidgetItem(pwd["service"]))
+            self.passwords = res
+            self.header.spinner.stop()
+            self.header.loadingIndicator.setHidden(True)
