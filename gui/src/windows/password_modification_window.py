@@ -13,7 +13,13 @@ import json
 
 
 class PasswordModificationWindow(Ui_PasswordModificationWindow):
+    """Class Modification key window"""
+
     def __init__(self, data, parent=None):
+        """Load window
+
+        @param data: data
+        """
         super().__init__(data, parent=parent)
 
         self.data = data
@@ -34,6 +40,7 @@ class PasswordModificationWindow(Ui_PasswordModificationWindow):
         self.ipfsPasswordLinkLineEdit.setText(f'https://ipfs.infura.io/ipfs/{self.data["address"]}')
 
     def passwordSaved(self, reply):
+        """Func which save key"""
         statusCode = reply.attribute(QNetworkRequest.HttpStatusCodeAttribute)
         if statusCode == 200:
             self.parent().getPasswords()
@@ -45,6 +52,7 @@ class PasswordModificationWindow(Ui_PasswordModificationWindow):
             msg.show()
 
     def checkChange(self, text):
+        """Func which check for change"""
         service = self.serviceLineEdit.text()
         login = self.loginLineEdit.text()
         password = self.passwordLineEdit.text()
@@ -53,6 +61,7 @@ class PasswordModificationWindow(Ui_PasswordModificationWindow):
                                                       password == self.data["password"]))
 
     def savePassword(self):
+        """Func which save password"""
         service = self.serviceLineEdit.text()
         login = self.loginLineEdit.text()
         password = self.passwordLineEdit.text()

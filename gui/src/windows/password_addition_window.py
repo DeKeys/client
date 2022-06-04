@@ -14,7 +14,9 @@ import json
 
 
 class PasswordAdditionWindow(Ui_PasswordModificationWindow):
+    """Class addition key window"""
     def __init__(self, data, parent=None):
+        """Load window"""
         super().__init__(data, parent=parent)
 
         self.networkManager = QNetworkAccessManager()
@@ -25,6 +27,7 @@ class PasswordAdditionWindow(Ui_PasswordModificationWindow):
         self.submitPasswordButton.setText("Add")
 
     def finishedAddingPassword(self, reply):
+        """Func which finish add key"""
         statusCode = reply.attribute(QNetworkRequest.HttpStatusCodeAttribute)
         if statusCode == 200:
             self.parent().parent.getPasswords()
@@ -39,6 +42,7 @@ class PasswordAdditionWindow(Ui_PasswordModificationWindow):
             msg.show()
 
     def buttonSubmitPressed(self):
+        """Func for button Submit, work with server"""
         service = self.serviceLineEdit.text()
         login = self.loginLineEdit.text()
         password = self.passwordLineEdit.text()

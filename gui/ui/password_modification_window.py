@@ -4,7 +4,9 @@ from PyQt5.QtCore import Qt
 
 
 class Ui_PasswordModificationWindow(QMainWindow):
+    """Class password modification window"""
     def __init__(self, data, parent=None):
+        """Load window"""
         super().__init__(parent=parent)
 
         self.resize(500, 0)
@@ -64,10 +66,12 @@ class Ui_PasswordModificationWindow(QMainWindow):
         self.setCentralWidget(self.centralWidget)
 
     def textChanged(self, new):
+        """text Changed check func"""
         self.submitPasswordButton.setEnabled(bool(self.serviceLineEdit.text() and\
                                                   self.loginLineEdit.text() and\
                                                   self.passwordLineEdit.text()))
     def password_open_button_func(self):
+        """Password open func"""
         if self.passwordOpenButton.isChecked():
             self.passwordLineEdit.setEchoMode(QLineEdit.EchoMode.Normal)
         else:

@@ -8,6 +8,7 @@ import os
 
 
 def getIconFromUrl(url: str) -> QIcon:
+    """Func which get service Icon"""
     pixmap = QPixmap()
     pixmap.loadFromData(requests.get(url + "/favicon.ico").content)
     icon = QIcon()
@@ -16,7 +17,10 @@ def getIconFromUrl(url: str) -> QIcon:
 
 
 class PasswordListWidgetItem(QListWidgetItem):
+    """Class of password list widget"""
+
     def __init__(self, *args, **kwargs):
+        """Load window"""
         super().__init__(*args, **kwargs)
 
         # Create network access manager for getting icon
@@ -33,6 +37,7 @@ class PasswordListWidgetItem(QListWidgetItem):
         self.setIcon(self.icon)
 
     def finished_getting_icon(self, reply):
+        """Finish getting icon"""
         status_code = reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)
         if status_code == 200:
             self.pixmap = QPixmap()

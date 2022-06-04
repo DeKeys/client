@@ -1,12 +1,13 @@
 from PyQt5.QtWidgets import QWidget, QGridLayout, QPushButton, QLabel
 from PyQt5.QtGui import QFont, QMovie
 from PyQt5.QtCore import QSize, Qt
-
 import os
 
 
 class Ui_PasswordsListHeader(QWidget):
+    """Password List Header"""
     def __init__(self, parent=None):
+        """Load widget"""
         super().__init__(parent=parent)
 
         self.gridLayout = QGridLayout()
