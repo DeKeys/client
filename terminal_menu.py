@@ -2,9 +2,14 @@ from functions import check_keys, sign_data, init_user, add_password, delete_pas
 
 
 def menu_terminal():
+    """Func which print menu and start another functions to work with server"""
     picture_terminal()
     private_key, public_key, pub_key_string = (keys_terminal())
-    signature, data = (sign_data(private_key))
+    try:
+        signature, data = (sign_data(private_key))
+    except:
+        print("No connection")
+        return
     init_flag = init_user(pub_key_string, signature, data)
     if init_flag != True:
         print("Your keys are invalid")
@@ -30,6 +35,7 @@ def menu_terminal():
                 break
 
 def picture_terminal():
+    """Func which print logo"""
     print(""""╔═══╗╔═══╗╔╗╔═╗╔═══╗╔╗──╔╗╔═══╗
 ╚╗╔╗║║╔══╝║║║╔╝║╔══╝║╚╗╔╝║║╔═╗║
 ─║║║║║╚══╗║╚╝╝─║╚══╗╚╗╚╝╔╝║╚══╗
@@ -39,19 +45,30 @@ def picture_terminal():
 
 
 def print_delimiter():
+    """Func which print delimiter"""
     print("=" * 80)
 
 
 def keys_terminal():
+    """Func which check/create private and public key"""
     print_delimiter()
     key_flag = (input("Do you have a private and public key?\nY/N\n")).upper()
     if key_flag == "N":
+        generate_keys()
+    elif key_flag != "Y":
         generate_keys()
     private_key, public_key, pub_key_string = (check_keys())
     return private_key, public_key, pub_key_string
 
 
 def add_password_terminal(public_key, pub_key_string, signature, data):
+    """Func which input data from user and start add_password func from functions.py
+
+    @param pub_key_string: public key in string type
+    @param public_key: public key
+    @param signature: signature for authentic user in server
+    @param data: key's data
+    """
     service = input("Enter service:\n")
     login = input("\nEnter login:\n")
     password = input("\nEnter password:\n")
@@ -63,6 +80,13 @@ def add_password_terminal(public_key, pub_key_string, signature, data):
 
 
 def get_password_terminal(pub_key_string, private_key, signature, data):
+    """Func which start get_passwords func from functions and print all keys to screen
+
+    @param pub_key_string: public key in string type
+    @param private_key: private key
+    @param signature: signature for authentic user in server
+    @param data: key's data
+    """
     res = get_passwords(pub_key_string, private_key, signature, data)
     count = 0
     print("")
@@ -76,6 +100,13 @@ def get_password_terminal(pub_key_string, private_key, signature, data):
 
 
 def remove_password_terminal(pub_key_string, signature, data, private_key):
+    """Func which find key which user want delete and start delete_password from functions.py
+
+    @param pub_key_string: public key in string type
+    @param private_key: private key
+    @param signature: signature for authentic user in server
+    @param data: key's data
+    """
     choice = input("Please, enter password id, which you want remove:\n")
     res = get_passwords(pub_key_string, private_key, signature, data)
     try:
@@ -87,7 +118,15 @@ def remove_password_terminal(pub_key_string, signature, data, private_key):
     delete_password(pub_key_string, signature, data, address)
     print("Your password has been removed")
 
-def change_password_terminal(public_key, pub_key_string, signature, data, private_key):    #This function need to change passwords, but now it not complete
+def change_password_terminal(public_key, pub_key_string, signature, data, private_key):
+    """Func which input data from user and start edit_password from functions
+
+    @param pub_key_string: public key in string type
+    @param private_key: private key
+    @param signature: signature for authentic user in server
+    @param data: key's data
+    @param public_key: public key
+    """
     choice = input("Please, enter password id, which you want change\n")
     res = get_passwords(pub_key_string, private_key, signature, data)
     try:
